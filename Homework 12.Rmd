@@ -10,7 +10,10 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
-
+library(writexl)
+library(dplyr)
+library(ggplot2)
+library(knitr)
 ```
 
 
@@ -18,8 +21,33 @@ library(readxl)
 ```{r}
 read_excel("penguins.xlsx")
 
-T_Island <- read_excel("penguins.xlsx", sheet="Torgersen Island", na="NA")
-B_Island <- read_excel("penguins.xlsx", sheet="Biscoe Island", na="NA")
-D_Island <- read_excel("penguins.xlsx", sheet="Dream Island", na="NA")
+t_island <- read_excel("penguins.xlsx", sheet="Torgersen Island", na="NA")
+head(t_island)
+b_island <- read_excel("penguins.xlsx", sheet="Biscoe Island", na="NA")
+head(b_island)
+d_island <- read_excel("penguins.xlsx", sheet="Dream Island", na="NA")
+head(d_island)
+
+```
+
+
+```{r}
+comb_islands <-bind_rows(T_Island, B_Island, D_Island)
+head(comb_islands)
+```
+
+
+```{r}
+ggplot(comb_islands, aes(x=bill_length_mm, y=bill_depth_mm, color=species))+
+  geom_point()+
+  facet_wrap(~island)
+```
+
+
+```{r}
+comb_islands%>%
+  group_by(species)%>%
+  summarize(avg_weight=mean(body_mass_g, na.rm=TRUE))%>%
+  kable()
 ```
 
