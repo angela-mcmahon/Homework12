@@ -51,3 +51,31 @@ comb_islands%>%
   kable()
 ```
 
+```{r, class.source='fold-show'}
+library(DBI)
+library(duckdb)
+con <- DBI::dbConnect(duckdb::duckdb())
+
+```
+
+
+```{r, class.source='fold-show'}
+dbWriteTable(con, "comb_islands", comb_islands)
+```
+
+
+```{r}
+comb_islands_db<-tbl(con,"comb_islands")
+comb_islands_db%>%
+  collect()
+```
+
+
+```{r}
+comb_islands_db%>%
+  select(species, body_mass_g)%>%
+  group_by(species)%>%
+  summarize(avg_mass=mean(body_mass_g, na.rm=TRUE))%>%
+  show_query()
+```
+
