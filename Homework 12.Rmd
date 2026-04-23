@@ -17,7 +17,7 @@ library(knitr)
 ```
 
 
-
+### Loading in Three Worksheets of Penguin Data 
 ```{r}
 read_excel("penguins.xlsx")
 
@@ -30,12 +30,14 @@ head(d_island)
 
 ```
 
+### Stacking the Three Sheets Together 
 
 ```{r}
 comb_islands <-bind_rows(T_Island, B_Island, D_Island)
 head(comb_islands)
 ```
 
+### Scatterplot: Bill Length vs. Depth (mm) by Isalnd 
 
 ```{r}
 ggplot(comb_islands, aes(x=bill_length_mm, y=bill_depth_mm, color=species))+
@@ -43,6 +45,7 @@ ggplot(comb_islands, aes(x=bill_length_mm, y=bill_depth_mm, color=species))+
   facet_wrap(~island)
 ```
 
+### Table of Species and Average Body Mass (g)
 
 ```{r}
 comb_islands%>%
@@ -50,6 +53,8 @@ comb_islands%>%
   summarize(avg_weight=mean(body_mass_g, na.rm=TRUE))%>%
   kable()
 ```
+
+### Starting New DuckDB Database 
 
 ```{r, class.source='fold-show'}
 library(DBI)
@@ -59,10 +64,14 @@ con <- DBI::dbConnect(duckdb::duckdb())
 ```
 
 
+### Writing Combinded Penguins Data into DuckDB 
+
 ```{r, class.source='fold-show'}
 dbWriteTable(con, "comb_islands", comb_islands)
 ```
 
+
+### Connection of Table to Dplyr
 
 ```{r}
 comb_islands_db<-tbl(con,"comb_islands")
@@ -70,6 +79,7 @@ comb_islands_db%>%
   collect()
 ```
 
+### SQL Query: Calculating Average Body Mass for Different Species
 
 ```{r}
 comb_islands_db%>%
