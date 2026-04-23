@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE )
 library(readxl)
 library(writexl)
 library(dplyr)
@@ -36,7 +36,7 @@ After downloading the Penguins excel workbook, loaded in each worksheet separate
 ### Stacking the Three Sheets Together 
 
 ```{r}
-comb_islands <-bind_rows(T_Island, B_Island, D_Island)
+comb_islands <-bind_rows(t_island, b_island, d_island)
 head(comb_islands)
 ```
 
