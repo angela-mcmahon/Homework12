@@ -30,12 +30,18 @@ head(d_island)
 
 ```
 
+After downloading the Penguins excel workbook, loaded in each worksheet separately. Each sheet was stored under it's island initial.
+^[Question 1 completed.]
+
 ### Stacking the Three Sheets Together 
 
 ```{r}
 comb_islands <-bind_rows(T_Island, B_Island, D_Island)
 head(comb_islands)
 ```
+
+To stack the three sheets, bound the rows to make the tibble longer. This was stored as comb. islands and the first few rows were displayed. 
+^[Question 2 completed.]
 
 ### Scatterplot: Bill Length vs. Depth (mm) by Isalnd 
 
@@ -44,6 +50,9 @@ ggplot(comb_islands, aes(x=bill_length_mm, y=bill_depth_mm, color=species))+
   geom_point()+
   facet_wrap(~island)
 ```
+
+Using the combined stored data, make a scatterplot of bill length versus bill depth. The points are colored by species and the graph faceted by the different islands in the Palmer Archipelago. Intersting there is only Adelie in Torgersen and they are also the only species at all three islands. 
+^[Question 3 completed.]
 
 ### Table of Species and Average Body Mass (g)
 
@@ -54,6 +63,9 @@ comb_islands%>%
   kable()
 ```
 
+Again using the stacked data, grouped by species. Used summarize from dplyr to create an average weight column where the mean of the body mass in g. was taken, the NAs were also removed. This was displayed in a table. 
+^[Question 4 completed.]
+
 ### Starting New DuckDB Database 
 
 ```{r, class.source='fold-show'}
@@ -63,6 +75,8 @@ con <- DBI::dbConnect(duckdb::duckdb())
 
 ```
 
+Loaded in R interface and duckDB. Established connection to new duckdb database. 
+^[Question 5 completed.]
 
 ### Writing Combinded Penguins Data into DuckDB 
 
@@ -70,6 +84,8 @@ con <- DBI::dbConnect(duckdb::duckdb())
 dbWriteTable(con, "comb_islands", comb_islands)
 ```
 
+Writing in the combined penguin tibble from the R environment into the duckdb as a table. 
+^[Question 6 completed. ]
 
 ### Connection of Table to Dplyr
 
@@ -78,6 +94,9 @@ comb_islands_db<-tbl(con,"comb_islands")
 comb_islands_db%>%
   collect()
 ```
+
+Created a dbplyr reference pointing R to my table inside my database. Used collect to download that data and bring i to my local enviornment as a table. 
+^[Question 7 completed.]
 
 ### SQL Query: Calculating Average Body Mass for Different Species
 
@@ -89,3 +108,5 @@ comb_islands_db%>%
   show_query()
 ```
 
+Using dbplyr again to perform a calculation within the database. First you select the species and body mass then group them by species. Calculated the average body mass in grams to. Showing the query displays the underlying SQL code generated to do the same as in the R chunk 
+^{Question 8 completed.}
